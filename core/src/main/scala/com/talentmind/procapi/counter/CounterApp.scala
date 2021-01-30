@@ -1,20 +1,12 @@
-package com.counter
+package com.talentmind.procapi.counter
 
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Route
-import com.counter.Counter.{
-  ActionPerformed,
-  ClearCounter,
-  Decrement,
-  GetCounter,
-  GetCounterResponse,
-  Increment,
-  SetValue
-}
-
+import com.talentmind.procapi.counter.Counter._
 import scala.util.{Failure, Success}
+
 
 object CounterApp extends {
 
@@ -24,7 +16,7 @@ object CounterApp extends {
 
     // Akka binds to some port and address on the local machine and waits for incoming requests
     val futureBinding =
-      Http().newServerAt("localhost", port = 8080).bind(routes)
+      Http().newServerAt("0.0.0.0", port = 9090).bind(routes)
     futureBinding.onComplete {
       case Success(binding) =>
         val address = binding.localAddress

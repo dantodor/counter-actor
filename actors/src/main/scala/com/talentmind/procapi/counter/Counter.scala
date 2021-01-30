@@ -1,4 +1,4 @@
-package com.counter
+package com.talentmind.procapi.counter
 
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, Behavior}
@@ -16,8 +16,9 @@ object Counter {
       extends Command
 
   // The messages the actor can emit as replies:
-  final case class GetCounterResponse(count: Int)
-  final case class ActionPerformed(description: String)
+  sealed trait Response
+  final case class GetCounterResponse(count: Int) extends Response
+  final case class ActionPerformed(description: String) extends Response
 
   // The function declaring how the actor responds to messages sent to him (his behavior)
   private def counter(count: Int): Behavior[Command] =

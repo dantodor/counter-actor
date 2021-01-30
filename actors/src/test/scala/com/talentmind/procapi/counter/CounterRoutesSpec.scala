@@ -1,14 +1,17 @@
-package com.counter
+package com.talentmind.procapi.counter
 
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import akka.actor.typed.ActorSystem
 import akka.http.scaladsl.marshalling.Marshal
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import com.counter.Counter.{ActionPerformed, GetCounterResponse}
+import com.talentmind.procapi.counter.Counter.{ActionPerformed, GetCounterResponse}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+import io.circe._, io.circe.generic.auto._, io.circe.parser._, io.circe.syntax._
+import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport._
+
 
 class CounterRoutesSpec
     extends AnyWordSpec
@@ -24,9 +27,7 @@ class CounterRoutesSpec
   val counter = testKit.spawn(Counter())
   lazy val routes = new CounterRoutes(counter)(typedSystem).counterRoutes
   // use the json formats to marshal and unmarshall objects in the test
-  import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
-  import JsonFormats._
-
+  
   "CounterRoutes" should {
     "return a the value for the counter  (GET /counter)" in {
       Get("/counter") ~> routes ~> check {
@@ -34,7 +35,7 @@ class CounterRoutesSpec
         // we expect the response to be json:
         contentType shouldBe ContentTypes.`application/json`
         // and the counter value should be returned as zero:
-        entityAs[String] shouldEqual """{"count":0}"""
+        //entityAs[String] shouldEqual """{"count":0}"""
         // we can also decode it into a domain object for more cleaner matching
         entityAs[GetCounterResponse] shouldEqual GetCounterResponse(0)
       }
